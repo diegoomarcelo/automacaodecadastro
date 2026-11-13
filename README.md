@@ -30,7 +30,7 @@ Um robô (RPA) que opera o navegador como um usuário faria: abre o sistema, faz
 **Principais funcionalidades**
 
 - Abre o Chrome e acessa o sistema automaticamente.
-- Faz login com as credenciais de teste do sistema.
+- Faz login com credenciais lidas de um arquivo `.env`, fora do código.
 - Lê a base `produtos.csv` (código, marca, tipo, categoria, preço unitário, custo e observação).
 - Preenche e envia o formulário para cada linha da tabela.
 - Pula o campo de observação quando ele está vazio na planilha, em vez de escrever "nan".
@@ -54,6 +54,7 @@ Um robô (RPA) que opera o navegador como um usuário faria: abre o sistema, faz
 | Automação | PyAutoGUI | Controla mouse e teclado do sistema operacional, então funciona com qualquer interface, mesmo sem API ou integração. |
 | Dados | Pandas | Lê o CSV em uma linha e trata valores ausentes (`pd.isna`) de forma confiável. |
 | Sincronismo | `time` + `pyautogui.PAUSE` | Pausas entre ações para a página carregar antes do próximo comando. |
+| Configuração | python-dotenv | Credenciais em `.env` (ignorado pelo Git), não no código-fonte. |
 
 ## 🧱 Arquitetura
 
@@ -72,6 +73,8 @@ flowchart LR
 ```
 automacaodecadastro/
 ├── automacaodecadastro.py   # script principal
+├── .env.example             # modelo das credenciais (copiar para .env)
+├── requirements.txt         # pyautogui, pandas, python-dotenv
 ├── produtos.csv             # base com 293 produtos
 ├── posicao.py               # utilitário: mostra a posição do mouse para mapear os cliques
 └── teste.py                 # pré-visualiza as 5 primeiras linhas da base antes de rodar
@@ -95,12 +98,15 @@ git clone https://github.com/diegoomarcelo/automacaodecadastro.git
 cd automacaodecadastro
 
 # 2. Instalar dependências
-pip install pyautogui pandas
+pip install -r requirements.txt
 
-# 3. (Se a sua resolução for diferente) mapear as posições dos cliques
+# 3. Criar o .env com as credenciais de teste
+cp .env.example .env              # Windows: copy .env.example .env
+
+# 4. (Se a sua resolução for diferente) mapear as posições dos cliques
 python posicao.py
 
-# 4. Executar e não mexer no mouse/teclado durante a execução
+# 5. Executar e não mexer no mouse/teclado durante a execução
 python automacaodecadastro.py
 ```
 
@@ -113,7 +119,6 @@ python automacaodecadastro.py
 
 ## 🗺️ Próximos passos
 
-- [ ] Ler URL e credenciais de variáveis de ambiente (`.env`) em vez de deixá-las no código.
 - [ ] Trocar coordenadas fixas por Selenium ou Playwright, localizando os campos pelo HTML.
 - [ ] Gerar um log com os produtos cadastrados e os que falharam.
 
