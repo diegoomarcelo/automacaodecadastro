@@ -1,6 +1,15 @@
+import os
 import pyautogui
 import time
 import pandas as pd
+from dotenv import load_dotenv
+
+# credenciais lidas do arquivo .env (veja .env.example), fora do código
+load_dotenv()
+EMAIL = os.getenv("LOGIN_EMAIL")
+SENHA = os.getenv("LOGIN_SENHA")
+if not EMAIL or not SENHA:
+    raise SystemExit("Defina LOGIN_EMAIL e LOGIN_SENHA no arquivo .env (copie o .env.example).")
 
 # importar a base de produtos no arquivo CSV
 tabela = pd.read_csv("produtos.csv")
@@ -19,9 +28,9 @@ pyautogui.press("enter")
 time.sleep(4) # tempo para executar
 
 pyautogui.click(x=785, y=508)
-pyautogui.write("diegoomarcelo@gmail.com")
+pyautogui.write(EMAIL)
 pyautogui.press("tab")
-pyautogui.write("essasenhateste")
+pyautogui.write(SENHA)
 pyautogui.press("tab")
 pyautogui.press("enter")
 
